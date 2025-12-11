@@ -1,0 +1,209 @@
+
+================================================================================
+IMDB DATASET PREPROCESSING & CLEANING REPORT
+================================================================================
+
+Generated: 2025-12-09 23:46:43
+Dataset Source: https://datasets.imdbws.com/
+
+================================================================================
+1. FILES PROCESSED
+================================================================================
+
+✓ title.basics.tsv - Core title information
+✓ title.ratings.tsv - Rating metrics
+✓ title.crew.tsv - Director and writer data
+✓ name.basics.tsv - Person information (assessed)
+✓ title.principals.tsv - Cast/crew data (sampled)
+✓ title.akas.tsv - Regional variants (assessed only - multiple entries per title)
+✓ title.episode.tsv - Episode data (assessed only - multiple entries per series)
+
+Note: Files with multiple entries per title (akas, episodes) were assessed
+but not merged to avoid data explosion.
+
+================================================================================
+2. DATA MERGING STRATEGY
+================================================================================
+
+Order: title_basics → ratings → crew
+Merge Type: INNER join (basics + ratings), LEFT join (crew)
+Rationale: Merged BEFORE cleaning to maintain referential integrity
+Result: 1,605,677 records after merging
+
+================================================================================
+3. DATA CLEANING OPERATIONS
+================================================================================
+
+3.1 Missing Value Handling
+---------------------------
+• originalTitle/ primaryTitle: removed 1 records (critical for identification)
+• startYear: Removed 252 records (critical for temporal analysis)
+• runtimeMinutes: kept 0 records (critical for analysis)
+• genres: Filled 22,317 values with 'Unknown'
+• directors/writers: Filled missing with 'Unknown'
+• endYear: Kept as NaN (valid for non-series)
+
+3.2 Duplicate Removal
+----------------------
+• Duplicates found: 0
+• Action: Removed duplicates based on tconst (kept first occurrence)
+
+3.3 Outlier Analysis
+---------------------
+• runtimeMinutes outliers: 10,369 (0.65%)
+  - IQR bounds: [-70.00, 178.00] minutes
+  - Action: VISUALIZED but NOT REMOVED (as requested)
+
+• numVotes outliers: 249,688 (15.55%)
+• averageRating outliers: 43,064 (2.68%)
+
+Note: All outliers documented but kept in dataset for complete analysis.
+
+3.4 Categorical Standardization
+--------------------------------
+• titleType: Standardized to lowercase, stripped whitespace
+• genres: Parsed and analyzed for multi-genre titles
+
+3.5 Feature Engineering
+------------------------
+Created derived features:
+• primary_genre: First genre from genres list
+• decade: Decade bins for temporal analysis
+• year_category: Era categorization (Pre-1950, 1950-1980, etc.)
+• num_directors: Count of directors per title
+• num_writers: Count of writers per title
+• rating_category: Ordinal bins (Poor to Excellent)
+• popularity_tier: Quantile-based popularity (Very Low to Very High)
+• genre_count: Number of genres per title
+
+================================================================================
+4. REDUNDANT ATTRIBUTE DETECTION
+================================================================================
+
+• High correlation check: Threshold > 0.95
+• Result: 0 highly correlated pairs found
+• isAdult column: Removed (adult ratio: 0.0148 < 1%)
+
+================================================================================
+5. FINAL DATASET CHARACTERISTICS
+================================================================================
+
+Shape: (1605677, 27)
+  - Records: 1,605,677
+  - Features: 27
+
+Temporal Coverage:
+  - Year range: 1874 - 2026
+  - Decades: 16 unique decades
+
+Title Types: 10 types
+  {'tvepisode': 816970, 'movie': 335794, 'short': 174495, 'tvseries': 107431, 'video': 56543, 'tvmovie': 55746, 'tvminiseries': 23739, 'videogame': 18860, 'tvspecial': 13610, 'tvshort': 2489}
+
+Genres: 29 unique primary genres
+  Top 5: {'Comedy': 364730, 'Drama': 279365, 'Action': 203229, 'Documentary': 161050, 'Crime': 107956}
+
+Rating Distribution:
+  - Mean: 6.97
+  - Median: 7.20
+  - Std: 1.41
+
+Memory Usage: 943.62 MB
+
+Data Completeness: 78.70%
+
+================================================================================
+6. FILES GENERATED
+================================================================================
+
+Cleaned Datasets:
+• cleaned_imdb_data.csv - Full cleaned dataset (CSV format)
+• cleaned_imdb_data.parquet - Full cleaned dataset (Parquet format)
+
+Visualizations:
+• missing_data_*.png - Missing data visualizations for each file
+• outlier_analysis_runtime.png - Detailed runtime outlier analysis
+• outlier_analysis_all_numeric.png - All numeric variable outliers
+• data_distributions.png - Distribution visualizations
+• temporal_trends.png - Temporal trend analysis
+• correlation_matrix.png - Correlation heatmap
+
+Reports:
+• cleaning_report.txt - This comprehensive report
+
+================================================================================
+7. DATA QUALITY METRICS
+================================================================================
+
+Before Cleaning:
+  - Total records: 1,605,930
+  - Missing values: Present in multiple columns
+  - Duplicates: 0
+
+After Cleaning:
+  - Total records: 1,605,677
+  - Records removed: 253 (0.02%)
+  - Missing critical values: 0
+  - Duplicates: 0
+
+================================================================================
+8. VARIABLE TYPES DOCUMENTATION
+================================================================================
+
+Quantitative Variables:
+  - Continuous: averageRating, runtimeMinutes
+  - Discrete: startYear, numVotes, genre_count, num_directors, num_writers
+
+Categorical Variables:
+  - Nominal: titleType, primary_genre, tconst
+  - Ordinal: rating_category, popularity_tier, year_category
+
+Temporal Variables:
+  - startYear (YYYY format)
+  - decade (decade bins)
+  - year_category (era bins)
+
+Text Variables:
+  - primaryTitle, originalTitle, genres, directors, writers
+
+================================================================================
+9. ETHICAL CONSIDERATIONS
+================================================================================
+
+Privacy:
+• No personal identifying information exposed
+• Public dataset from official IMDB source
+
+Bias Mitigation:
+• Adult content filtered (isAdult removed - <1% of data)
+• All title types included for comprehensive analysis
+• No genre excluded (including 'Unknown')
+
+Data Integrity:
+• Outliers documented but not arbitrarily removed
+• Referential integrity maintained through proper merge order
+• All filtering decisions documented with justification
+
+Transparency:
+• All transformations logged
+• Before/after statistics provided
+• Visual documentation of key decisions
+
+================================================================================
+10. NEXT STEPS
+================================================================================
+
+✓ Data is cleaned and ready for:
+  1. Data Reduction & Transformation
+  2. Exploratory Data Analysis
+  3. Visualization Design
+  4. Statistical Analysis
+
+✓ Recommended analyses:
+  - Temporal trends (production volume, rating evolution)
+  - Genre analysis (popularity, quality)
+  - Runtime vs rating correlation
+  - Decade comparisons
+
+================================================================================
+END OF REPORT
+================================================================================

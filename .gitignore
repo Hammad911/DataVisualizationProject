@@ -1,0 +1,258 @@
+# ============================================================================
+# IMDb Analytics Project - .gitignore
+# ============================================================================
+
+# ============================================================================
+# LARGE DATA FILES (Don't commit to Git)
+# ============================================================================
+
+# Raw IMDb dataset files (download these separately)
+*.tsv
+*.tsv.gz
+
+# Processed data files (too large for Git)
+processed/cleaned_imdb_data.csv
+processed/cleaned_imdb_data.parquet
+processed/cleaned_imdb_sample.csv
+processed/*.csv
+processed/*.parquet
+
+# Backup files
+*_backup.*
+*.bak
+
+# ============================================================================
+# PYTHON
+# ============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# ============================================================================
+# JUPYTER NOTEBOOK
+# ============================================================================
+
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+profile_default/
+ipython_config.py
+
+# Jupyter Notebook temporary files
+.jupyter/
+*.ipynb_temp
+
+# ============================================================================
+# IDE & EDITORS
+# ============================================================================
+
+# VS Code
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Cursor
+.cursor/
+.cursorrules
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============================================================================
+# OPERATING SYSTEM
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================================================
+# PROJECT SPECIFIC
+# ============================================================================
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Output files (keep structure, ignore content if too large)
+output/
+results/
+
+# Keep processed folder structure but ignore large files
+# (see processed/ rules above)
+
+# Dashboard cache
+.dash_cache/
+
+# ============================================================================
+# DOCUMENTATION (Optional - decide what to track)
+# ============================================================================
+
+# Uncomment if you don't want to track generated docs
+# *.pdf
+# *.docx
+# *.pptx
+
+# But keep project documentation
+!Project*.pdf
+!ProjectDoc.pdf
+!Project*Statement.pdf
+!Impactful*Visualizations.docx
+
+# ============================================================================
+# VISUALIZATION EXPORTS (Optional)
+# ============================================================================
+
+# Uncomment to ignore exported PNG files (can regenerate)
+# processed/*.png
+# *.png
+
+# Keep important visualizations
+!processed/adv_*.png
+!processed/missing_data_*.png
+
+# ============================================================================
+# MISCELLANEOUS
+# ============================================================================
+
+# Compressed files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Configuration files with secrets
+config.ini
+secrets.json
+.secrets
+
+# Node modules (if using any JS tools)
+node_modules/
+
+# ============================================================================
+# KEEP THESE FILES (Override above rules)
+# ============================================================================
+
+# Keep essential documentation
+!README.md
+!requirements.txt
+!ENVIRONMENT_SETUP.md
+
+# Keep essential configuration
+!.gitignore
+
+# Keep example/sample data (if small)
+# !data/sample_*.csv
+
+# ============================================================================
+# END OF .gitignore
+# ============================================================================
+
