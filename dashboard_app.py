@@ -36,22 +36,22 @@ COLORS = {
 # ============================================================================
 # LOAD DATA (OPTIMIZED WITH SAMPLING FOR LARGE DATASETS)
 # ============================================================================
-print("🔄 Loading IMDb dataset...")
+print("Loading IMDb dataset...")
 try:
     # Try parquet first (faster)
     df = pd.read_parquet('processed/cleaned_imdb_data.parquet')
-    print(f"✓ Loaded from Parquet: {len(df):,} records")
+    print(f"Loaded from Parquet: {len(df):,} records")
 except:
     # Fallback to CSV with sampling if too large
     df = pd.read_csv('processed/cleaned_imdb_data.csv')
-    print(f"✓ Loaded from CSV: {len(df):,} records")
+    print(f"Loaded from CSV: {len(df):,} records")
     
     # Sample if dataset is very large (for performance)
     if len(df) > 500000:
-        print(f"⚡ Sampling 500K records for optimal performance...")
+        print(f"Sampling 500K records for optimal performance...")
         df = df.sample(n=500000, random_state=42)
 
-print(f"📊 Dataset: {len(df):,} records × {df.shape[1]} features")
+print(f"Dataset: {len(df):,} records × {df.shape[1]} features")
 
 # Convert numeric columns
 numeric_cols = ['startYear', 'runtimeMinutes', 'averageRating', 'numVotes', 
@@ -124,21 +124,21 @@ def create_temporal_trends():
     
     # Titles over time with modern styling
     fig1 = px.area(yearly_counts, x='startYear', y='count',
-                   title='📊 Title Production Over Time',
+                   title='Title Production Over Time',
                    labels={'startYear': 'Year', 'count': 'Number of Titles'})
     fig1.update_traces(fillcolor=COLORS['primary'], line_color=COLORS['primary'], opacity=0.6)
     fig1.update_layout(template='plotly_white', hovermode='x unified')
     
     # Average rating over time
     fig2 = px.line(yearly_ratings, x='startYear', y='averageRating',
-                   title='⭐ Average Rating Trends',
+                   title='Average Rating Trends',
                    labels={'startYear': 'Year', 'averageRating': 'Average Rating'})
     fig2.update_traces(line_color=COLORS['warning'], line_width=3)
     fig2.update_layout(template='plotly_white', hovermode='x unified')
     
     # Runtime trends
     fig3 = px.line(yearly_runtime, x='startYear', y='runtimeMinutes',
-                   title='⏱️ Runtime Trends',
+                   title='Runtime Trends',
                    labels={'startYear': 'Year', 'runtimeMinutes': 'Average Runtime (minutes)'})
     fig3.update_traces(line_color=COLORS['success'], line_width=3)
     fig3.update_layout(template='plotly_white', hovermode='x unified')
@@ -150,7 +150,7 @@ def create_genre_evolution():
     genre_data = create_genre_evolution_data()
     
     fig = px.area(genre_data, x='decade', y='count', color='genre',
-                  title='🎭 Genre Evolution Across Decades',
+                  title='Genre Evolution Across Decades',
                   labels={'decade': 'Decade', 'count': 'Number of Titles', 'genre': 'Genre'},
                   color_discrete_sequence=px.colors.qualitative.Bold)
     fig.update_layout(
@@ -196,7 +196,7 @@ def create_runtime_vs_rating():
     ))
     
     fig.update_layout(
-        title='🎯 Runtime vs Rating - The Sweet Spot',
+        title='Runtime vs Rating - The Sweet Spot',
         xaxis_title='Runtime (minutes)',
         yaxis_title='Average Rating',
         height=500,
@@ -209,14 +209,14 @@ def create_rating_distributions():
     """Create modern rating distribution visualizations"""
     # Rating histogram with gradient
     fig1 = px.histogram(df, x='averageRating', nbins=20,
-                       title='⭐ Distribution of Average Ratings',
+                       title='Distribution of Average Ratings',
                        labels={'averageRating': 'Average Rating', 'count': 'Frequency'})
     fig1.update_traces(marker_color=COLORS['warning'], marker_line_color='white', marker_line_width=1.5)
     fig1.update_layout(template='plotly_white')
     
     # Rating by title type with modern colors
     fig2 = px.box(df, x='titleType', y='averageRating',
-                  title='📺 Rating Distribution by Title Type',
+                  title='Rating Distribution by Title Type',
                   labels={'titleType': 'Title Type', 'averageRating': 'Average Rating'},
                   color='titleType',
                   color_discrete_sequence=px.colors.qualitative.Set2)
@@ -224,7 +224,7 @@ def create_rating_distributions():
     
     # Rating by decade
     fig3 = px.violin(df, x='decade', y='averageRating',
-                  title='📅 Rating Distribution by Decade',
+                  title='Rating Distribution by Decade',
                   labels={'decade': 'Decade', 'averageRating': 'Average Rating'},
                   color='decade',
                   color_discrete_sequence=px.colors.sequential.Viridis)
@@ -238,7 +238,7 @@ def create_genre_analysis():
     top_genres_data = df[df['primary_genre'] != 'Unknown']['primary_genre'].value_counts().head(15)
     fig1 = px.bar(x=top_genres_data.values, y=top_genres_data.index,
                   orientation='h',
-                  title='🏆 Top 15 Primary Genres',
+                  title='Top 15 Primary Genres',
                   labels={'x': 'Count', 'y': 'Genre'})
     fig1.update_traces(marker_color=top_genres_data.values, 
                       marker_colorscale='Viridis',
@@ -250,7 +250,7 @@ def create_genre_analysis():
     top_5_genres = df['primary_genre'].value_counts().head(5).index
     df_top_genres = df[df['primary_genre'].isin(top_5_genres)]
     fig2 = px.violin(df_top_genres, x='primary_genre', y='averageRating',
-                  title='🎭 Rating Distribution for Top 5 Genres',
+                  title='Rating Distribution for Top 5 Genres',
                   labels={'primary_genre': 'Genre', 'averageRating': 'Rating'},
                   color='primary_genre',
                   color_discrete_sequence=px.colors.qualitative.Pastel)
@@ -259,7 +259,7 @@ def create_genre_analysis():
     # Genre count analysis with modern bars
     genre_count_stats = df[df['genre_count'] > 0].groupby('genre_count')['averageRating'].mean().reset_index()
     fig3 = px.bar(genre_count_stats, x='genre_count', y='averageRating',
-                  title='📊 Average Rating by Number of Genres',
+                  title='Average Rating by Number of Genres',
                   labels={'genre_count': 'Number of Genres', 'averageRating': 'Average Rating'})
     fig3.update_traces(marker_color=COLORS['secondary'], marker_line_color='white', marker_line_width=1.5)
     fig3.update_layout(template='plotly_white')
@@ -364,7 +364,7 @@ def create_correlation_heatmap():
                    y=corr_matrix.columns,
                    color_continuous_scale='RdBu_r',
                    zmin=-1, zmax=1,
-                   title='🔗 Correlation Matrix of Numeric Variables',
+                   title='Correlation Matrix of Numeric Variables',
                    aspect="auto")
     
     fig.update_layout(
@@ -566,7 +566,7 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             html.Div([
-                html.H1("🎬 IMDb Analytics Dashboard", className="dashboard-title"),
+                html.H1("IMDb Analytics Dashboard", className="dashboard-title"),
                 html.P("Comprehensive insights from millions of titles across cinema history", 
                       className="dashboard-subtitle")
             ], className="dashboard-header")
@@ -577,28 +577,28 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             html.Div([
-                html.Div("📊 Total Titles", className="stat-label"),
+                html.Div("Total Titles", className="stat-label"),
                 html.Div(stats['total_titles'], className="stat-value"),
                 html.P("Movies, TV Shows & More", style={'color': '#94a3b8', 'fontSize': '0.875rem', 'margin': '4px 0 0 0'})
             ], className="stat-card")
         ], width=3, xs=12, sm=6, md=3),
         dbc.Col([
             html.Div([
-                html.Div("⭐ Average Rating", className="stat-label"),
+                html.Div("Average Rating", className="stat-label"),
                 html.Div(stats['avg_rating'], className="stat-value"),
                 html.P("Across All Titles", style={'color': '#94a3b8', 'fontSize': '0.875rem', 'margin': '4px 0 0 0'})
             ], className="stat-card")
         ], width=3, xs=12, sm=6, md=3),
         dbc.Col([
             html.Div([
-                html.Div("📅 Time Span", className="stat-label"),
+                html.Div("Time Span", className="stat-label"),
                 html.Div(stats['year_range'], className="stat-value", style={'fontSize': '1.75rem'}),
                 html.P("Years of Cinema", style={'color': '#94a3b8', 'fontSize': '0.875rem', 'margin': '4px 0 0 0'})
             ], className="stat-card")
         ], width=3, xs=12, sm=6, md=3),
         dbc.Col([
             html.Div([
-                html.Div("🎭 Unique Genres", className="stat-label"),
+                html.Div("Unique Genres", className="stat-label"),
                 html.Div(str(stats['unique_genres']), className="stat-value"),
                 html.P("Genre Categories", style={'color': '#94a3b8', 'fontSize': '0.875rem', 'margin': '4px 0 0 0'})
             ], className="stat-card")
@@ -622,7 +622,7 @@ app.layout = dbc.Container([
                         dbc.Col([html.Div([dcc.Graph(figure=create_decade_analysis(), config={'displayModeBar': False})], className="graph-container")], width=12)
                     ])
                 ], className="tab-content")
-            ], label="📈 Temporal Trends", tab_id="temporal"),
+            ], label="Temporal Trends", tab_id="temporal"),
             
             # TAB 2: Rating Analysis
             dbc.Tab([
@@ -638,7 +638,7 @@ app.layout = dbc.Container([
                         dbc.Col([html.Div([dcc.Graph(figure=create_correlation_heatmap(), config={'displayModeBar': False})], className="graph-container")], width=12)
                     ])
                 ], className="tab-content")
-            ], label="⭐ Ratings", tab_id="ratings"),
+            ], label="Ratings", tab_id="ratings"),
             
             # TAB 3: Genre Analysis
             dbc.Tab([
@@ -654,7 +654,7 @@ app.layout = dbc.Container([
                         dbc.Col([html.Div([dcc.Graph(figure=genre_fig3, config={'displayModeBar': False})], className="graph-container")], width=12)
                     ])
                 ], className="tab-content")
-            ], label="🎭 Genres", tab_id="genres"),
+            ], label="Genres", tab_id="genres"),
             
             # TAB 4: Runtime Analysis
             dbc.Tab([
@@ -670,7 +670,7 @@ app.layout = dbc.Container([
                         dbc.Col([html.Div([dcc.Graph(figure=runtime_fig3, config={'displayModeBar': False})], className="graph-container")], width=12)
                     ])
                 ], className="tab-content")
-            ], label="⏱️ Runtime", tab_id="runtime"),
+            ], label="Runtime", tab_id="runtime"),
             
             # TAB 5: Popularity Analysis
             dbc.Tab([
@@ -683,7 +683,7 @@ app.layout = dbc.Container([
                         dbc.Col([html.Div([dcc.Graph(figure=pop_fig2, config={'displayModeBar': False})], className="graph-container")], width=6, md=6, sm=12)
                     ])
                 ], className="tab-content")
-            ], label="🔥 Popularity", tab_id="popularity"),
+            ], label="Popularity", tab_id="popularity"),
             
             # TAB 6: Advanced Insights
             dbc.Tab([
@@ -695,7 +695,7 @@ app.layout = dbc.Container([
                         dbc.Col([html.Div([dcc.Graph(figure=create_advanced_insights()[1], config={'displayModeBar': False})], className="graph-container")], width=12)
                     ])
                 ], className="tab-content")
-            ], label="🚀 Insights", tab_id="advanced"),
+            ], label="Insights", tab_id="advanced"),
             
         ], id="tabs", active_tab="temporal")
     ], style={'marginBottom': '32px'}),
@@ -707,7 +707,7 @@ app.layout = dbc.Container([
                 html.Hr(style={'margin': '48px 0 24px 0', 'opacity': '0.2'}),
                 html.Div([
                     html.P([
-                        "📊 Built with ",
+                        "Built with ",
                         html.Strong("Plotly Dash"),
                         " | Data from ",
                         html.A("IMDb Datasets", href="https://datasets.imdbws.com/", 
@@ -716,7 +716,7 @@ app.layout = dbc.Container([
                     ], style={'textAlign': 'center', 'color': '#64748b', 'fontSize': '0.875rem', 'marginBottom': '8px'}),
                     html.P([
                         "© 2024 IMDb Analytics Dashboard | ",
-                        html.Span("Made with ❤️ for Data Visualization", style={'opacity': '0.7'})
+                        html.Span("Made with  for Data Visualization", style={'opacity': '0.7'})
                     ], style={'textAlign': 'center', 'color': '#94a3b8', 'fontSize': '0.75rem', 'marginBottom': '24px'})
                 ])
             ])
@@ -731,21 +731,21 @@ app.layout = dbc.Container([
 
 if __name__ == '__main__':
     print("\n" + "="*80)
-    print("🚀 Starting IMDb Analytics Dashboard")
+    print("Starting IMDb Analytics Dashboard")
     print("="*80)
-    print("\n✨ Features:")
+    print("\nFeatures:")
     print("   • Modern, clean interface with gradient design")
     print("   • 21+ interactive visualizations across 6 categories")
     print("   • Responsive layout for all screen sizes")
     print("   • Professional color schemes and styling")
-    print("\n📊 Dashboard Sections:")
-    print("   ✓ Temporal Trends - Historical analysis over time")
-    print("   ✓ Rating Analysis - Quality metrics and distributions")
-    print("   ✓ Genre Analysis - Genre evolution and patterns")
-    print("   ✓ Runtime Analysis - Optimal movie lengths")
-    print("   ✓ Popularity Analysis - Audience engagement metrics")
-    print("   ✓ Advanced Insights - Deep-dive analytics")
-    print("\n🌐 Dashboard running at: http://127.0.0.1:8050/")
+    print("\nDashboard Sections:")
+    print("   - Temporal Trends - Historical analysis over time")
+    print("   - Rating Analysis - Quality metrics and distributions")
+    print("   - Genre Analysis - Genre evolution and patterns")
+    print("   - Runtime Analysis - Optimal movie lengths")
+    print("   - Popularity Analysis - Audience engagement metrics")
+    print("   - Advanced Insights - Deep-dive analytics")
+    print("\nDashboard running at: http://127.0.0.1:8050/")
     print("   Press CTRL+C to stop the server")
     print("="*80 + "\n")
     
